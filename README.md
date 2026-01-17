@@ -1,0 +1,1 @@
+# gozero-pg-model-gen
