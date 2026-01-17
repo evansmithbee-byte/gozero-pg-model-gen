@@ -1,0 +1,30 @@
+package {{.Package}}
+
+import "github.com/zeromicro/go-zero/core/stores/sqlx"
+
+var _ {{.Meta.TypeName}}Model = (*custom{{.Meta.TypeName}}Model)(nil)
+
+type (
+	// {{.Meta.TypeName}}Model is an interface to be customized, add more methods here,
+	// and implement the added methods in custom{{.Meta.TypeName}}Model.
+	{{.Meta.TypeName}}Model interface {
+		{{.Meta.LowerTypeName}}Model
+		WithSession(session sqlx.Session) {{.Meta.TypeName}}Model
+	}
+
+	custom{{.Meta.TypeName}}Model struct {
+		*default{{.Meta.TypeName}}Model
+	}
+)
+
+// New{{.Meta.TypeName}}Model returns a model for the database table.
+func New{{.Meta.TypeName}}Model(conn sqlx.SqlConn) {{.Meta.TypeName}}Model {
+	return &custom{{.Meta.TypeName}}Model{
+		default{{.Meta.TypeName}}Model: new{{.Meta.TypeName}}Model(conn),
+	}
+}
+
+func (m *custom{{.Meta.TypeName}}Model) WithSession(session sqlx.Session) {{.Meta.TypeName}}Model {
+	return New{{.Meta.TypeName}}Model(sqlx.NewSqlConnFromSession(session))
+}
+
